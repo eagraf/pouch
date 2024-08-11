@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "name": "Save to Pocket",
+  "name": "Habitat",
   "default_locale": "en",
   "icons": {
     "16": "assets/images/icon-16.png",
@@ -11,7 +11,7 @@
     "default_icon": {
       "38": "assets/images/action-icon.png"
     },
-    "default_title": "Save to Pocket"
+    "default_title": "Habitat"
   },
   "background": {
     "service_worker": "pages/background/index.js"
@@ -32,7 +32,7 @@
     },
     {
       "matches": [
-        "*://getpocket.com/extension_login_success*"
+        "*://habitat-dev.tail07d32.ts.net/extension_login_success*"
       ],
       "js": [
         "pages/login.js"
@@ -40,7 +40,7 @@
     },
     {
       "matches": [
-        "*://getpocket.com/login?e=4"
+        "*://habitat-dev.tail07d32.ts.net/login?e=4"
       ],
       "js": [
         "pages/logout.js"
@@ -48,7 +48,7 @@
     }
   ],
   "host_permissions": [
-    "*://getpocket.com/*"
+    "*://habitat-dev.tail07d32.ts.net/*"
   ],
   "permissions": [
     "tabs",
@@ -65,7 +65,7 @@
         "chromeos": "Ctrl+Shift+P",
         "linux": "Ctrl+Shift+P"
       },
-      "description": "Save page to Pocket"
+      "description": "Save page to Habitat"
     }
   }
 }

@@ -1,4 +1,5 @@
 import * as Sentry from '@sentry/browser'
+import { HABITAT_GREEN } from './constants'
 
 /* Messaging
 –––––––––––––––––––––––––––––––––––––––––––––––––– */
@@ -32,7 +33,7 @@ export function savedIcon() {
     'M16 31C24.8366 31 32 23.7868 32 14.8889V5.22167C32 3.44208 30.5673 2 28.8 2H3.2C1.43269 2 0 3.43932 0 5.2189V14.8889C0 23.7868 7.16344 31 16 31ZM10.7314 12.1386C10.1065 11.5094 9.09347 11.5094 8.46863 12.1386C7.84379 12.7677 7.84379 13.7878 8.46863 14.417L14.8686 20.8615C15.4935 21.4906 16.5065 21.4906 17.1314 20.8615L23.5314 14.417C24.1562 13.7878 24.1562 12.7677 23.5314 12.1386C22.9065 11.5094 21.8935 11.5094 21.2686 12.1386L16 17.4438L10.7314 12.1386Z',
   )
   context.clearRect(0, 0, 32, 32)
-  context.fillStyle = '#EF4056' // Pocket Brand Coral/Red
+  context.fillStyle = HABITAT_GREEN
   context.fill(saved, 'evenodd')
   return context.getImageData(0, 0, 32, 32)
 }
@@ -49,7 +50,7 @@ export function inactiveIcon() {
   )
 
   context.clearRect(0, 0, 32, 32)
-  context.fillStyle = '#EF4056' // Pocket Brand Coral/Red
+  context.fillStyle = HABITAT_GREEN
   context.fill(outer, 'evenodd')
   context.fill(inner, 'evenodd')
   return context.getImageData(0, 0, 32, 32)

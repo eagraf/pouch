@@ -48,10 +48,10 @@
     "message": "Save"
   },
   "context_menu_open_list": {
-    "message": "Open Your Pocket Saves"
+    "message": "Open Your Habitat Saves"
   },
   "context_menu_discover_more": {
-    "message": "Discover more at Pocket"
+    "message": "Discover more at Habitat"
   },
   "context_menu_log_in": {
     "message": "Log In"
@@ -60,13 +60,13 @@
     "message": "Log Out"
   },
   "context_menu_save": {
-    "message": "Save To Pocket"
+    "message": "Save To Habitat"
   },
   "tagging_add_tags": {
     "message": "Add Tags"
   },
   "options_header": {
-    "message": "Save to Pocket extension"
+    "message": "Save to Habitat extension"
   },
   "options_login_title": {
     "message": "Logged in as"
@@ -96,7 +96,7 @@
     "message": "Use System Setting"
   },
   "options_app_title": {
-    "message": "Pocket’s Mobile App"
+    "message": "Habitat’s Mobile App"
   },
   "options_app_apple": {
     "message": "Download on the Apple App Store"
@@ -111,10 +111,10 @@
     "message": "Email Us"
   },
   "options_follow": {
-    "message": "Follow Pocket"
+    "message": "Follow Habitat"
   },
   "options_family": {
-    "message": "Pocket is part of the Mozilla family of products."
+    "message": "Learn more about Habitat."
   },
   "options_privacy": {
     "message": "Privacy policy"
