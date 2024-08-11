@@ -35,6 +35,28 @@ async function request(options, skipAuth) {
     .then(handleSuccess)
 }
 
+async function getRequest(options, skipAuth) {
+  if (!CONSUMER_KEY) throw new Error('Invalid Auth Key')
+  if (!skipAuth) options.data.access_token = await getAccessToken()
+
+  options.data.consumer_key = CONSUMER_KEY
+
+  const headers = new Headers({
+    'X-Accept': 'application/json',
+    'Content-Type': 'application/json',
+    'Authorization': 'Bearer ' + options.data.access_token,
+  })
+
+  const fetchSettings = {
+    method: 'GET',
+    headers: headers,
+  }
+
+  return fetch(API_URL + options.path, fetchSettings)
+    .then(handleErrors)
+    .then(handleSuccess)
+}
+
 function handleErrors(response) {
   const xErrorCode = response.headers.get('x-error-code')
   const xError = response.headers.get('x-error')
@@ -49,4 +71,4 @@ function handleSuccess(response) {
   return response ? response.json() : false
 }
 
-export { request }
+export { request, getRequest }

@@ -1,3 +1,4 @@
+import { TS_NET_DOMAIN } from './constants'
 import { getSetting } from './interface'
 
 export function isSystemPage(tab) {
@@ -21,8 +22,9 @@ export function checkDuplicate(list, tagValue) {
 }
 
 export function closeLoginPage() {
+  console.log("CLOSING");
   chrome.tabs.query(
-    { url: '*://getpocket.com/extension_login_success*' },
+    { url: '*://' + TS_NET_DOMAIN + '/extension_login_success*' },
     (tabs) => {
       chrome.tabs.remove(tabs.map((tab) => tab.id))
     },

@@ -12,18 +12,18 @@ async function setLoginLoaded() {
   try {
     const siteCookies = getCookies(document.cookie)
 
-    if (!siteCookies['sess_user_id'] || !siteCookies['sess_exttok']) {
+    if (!siteCookies['chrome_extension_user_id'] || !siteCookies['chrome_extension_access_token']) {
       console.groupCollapsed('Auth Error')
       console.log({
-        userId: siteCookies['sess_user_id'],
-        token: siteCookies['sess_exttok']
+        userId: siteCookies['chrome_extension_user_id'],
+        token: siteCookies['chrome_extension_access_token']
       })
       console.groupEnd('Auth Error')
     }
 
     const loginMessage = {
-      userId: siteCookies['sess_user_id'],
-      token: siteCookies['sess_exttok'],
+      userId: siteCookies['chrome_extension_user_id'],
+      token: siteCookies['chrome_extension_access_token'],
     }
 
     // This time out is for user experience so they don't get a flash of
