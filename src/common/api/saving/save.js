@@ -2,21 +2,19 @@ import { request } from '../_request/request'
 
 /* API CALLS - Should return promises
 –––––––––––––––––––––––––––––––––––––––––––––––––– */
-export function saveToPocket(saveObject) {
+export function saveToPocket(saveObject, userId) {
+  console.log("SAVE");
   return request({
-    path: 'send/',
+    path: 'com.atproto.repo.createRecord',
     data: {
-      actions: [
-        {
-          action: 'add',
-          url: saveObject.url,
-          title: saveObject.title,
-          ...saveObject.actionInfo,
-          ...saveObject.additionalParams
+        repo: userId,
+        collection: "com.habitat.pouch.link",
+        record: {
+            url: saveObject.url,
+            createdAt: new Date().toISOString(),
         }
-      ]
-    }
-  }).then(response => {
+      }
+    }).then(response => {
     return response
       ? { saveObject, status: 'ok', response: response.action_results[0] }
       : undefined

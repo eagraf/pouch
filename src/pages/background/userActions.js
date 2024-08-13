@@ -71,11 +71,12 @@ async function save({ linkUrl, pageUrl, title, tabId }) {
   try {
     // Are we authed?
     const access_token = await getSetting('access_token')
+    const user_id = await getSetting('user_id')
     if (!access_token) return logIn({ linkUrl, pageUrl, title, tabId })
 
     const url = linkUrl || pageUrl
 
-    const { response: payload } = await saveToPocket({ url, title, tabId })
+    const { response: payload } = await saveToPocket({ url, title, tabId }, user_id)
     // send a message with the response
     const message = payload
       ? { action: SAVE_TO_POCKET_SUCCESS, payload }
