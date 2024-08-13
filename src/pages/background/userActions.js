@@ -1,5 +1,4 @@
 import { saveSuccess } from './postSave'
-import * as Sentry from '@sentry/browser'
 
 import { isSystemPage, isSystemLink } from 'common/helpers'
 import { getSetting, setSettings } from 'common/interface'
@@ -144,19 +143,14 @@ export async function tagsErrorAction(tab, payload) {
 /* Authentication user
 –––––––––––––––––––––––––––––––––––––––––––––––––– */
 export async function authCodeRecieved(tab, payload) {
-  // Getting a Guid to use in the request
-  // Getting an auth token
   try {
-    const guidResponse = await getGuid()
-    const authResponse = await authorize(guidResponse, payload)
-    const { access_token, account, username } = authResponse
-    const { premium_status } = account
-    setSettings({ access_token, premium_status, username })
+    // TODO check the result of authorize
+    const authResponse = await authorize(payload)
+
+    const { user_id, token } = payload;
+    setSettings({ access_token: token, user_id })
   } catch (err) {
-    Sentry.withScope((scope) => {
-      scope.setFingerprint('Auth Error')
-      Sentry.captureMessage(err)
-    })
+    console.log(err);
   }
 
   closeLoginPage()

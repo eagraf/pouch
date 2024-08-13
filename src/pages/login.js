@@ -15,14 +15,14 @@ async function setLoginLoaded() {
     if (!siteCookies['chrome_extension_user_id'] || !siteCookies['chrome_extension_access_token']) {
       console.groupCollapsed('Auth Error')
       console.log({
-        userId: siteCookies['chrome_extension_user_id'],
+        user_id: siteCookies['chrome_extension_user_id'],
         token: siteCookies['chrome_extension_access_token']
       })
       console.groupEnd('Auth Error')
     }
 
     const loginMessage = {
-      userId: siteCookies['chrome_extension_user_id'],
+      user_id: siteCookies['chrome_extension_user_id'],
       token: siteCookies['chrome_extension_access_token'],
     }
 
