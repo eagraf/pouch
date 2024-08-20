@@ -77,6 +77,7 @@ async function save({ linkUrl, pageUrl, title, tabId }) {
     const url = linkUrl || pageUrl
 
     const { response: payload } = await saveToPocket({ url, title, tabId }, user_id)
+
     // send a message with the response
     const message = payload
       ? { action: SAVE_TO_POCKET_SUCCESS, payload }
@@ -84,7 +85,7 @@ async function save({ linkUrl, pageUrl, title, tabId }) {
 
     chrome.tabs.sendMessage(tabId, message)
 
-    if (payload) saveSuccess(tabId, { ...payload, isLink: Boolean(linkUrl) })
+    if (payload) saveSuccess(tabId, { ...payload, url: pageUrl, isLink: true })
   } catch (error) {
     // If it is an auth error let's redirect the user
     if (error?.xErrorCode === '107') {
@@ -121,12 +122,13 @@ export async function removeItemAction(tab, payload) {
 –––––––––––––––––––––––––––––––––––––––––––––––––– */
 export async function tagsSyncAction(tab, payload) {
   const { id: tabId } = tab
-  const { item_id, tags, ...actionInfo } = payload
+  const { item_id, url, tags } = payload
 
   // send message that we are attempting to sync tags
   chrome.tabs.sendMessage(tabId, { action: TAG_SYNC_REQUEST })
 
-  const { response } = await syncItemTags(item_id, tags, actionInfo)
+  const user_id = await getSetting('user_id')
+  const { response } = await syncItemTags(item_id, user_id, url, tags)
   const message = response
     ? { action: TAG_SYNC_SUCCESS, payload }
     : { action: TAG_SYNC_FAILURE, payload }

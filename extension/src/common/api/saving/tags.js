@@ -12,16 +12,24 @@ export function getOnSaveTags(url) {
   }).then(response => response)
 }
 
-export function syncItemTags(id, tags, actionInfo) {
-  return request({
-    path: 'send/',
-    data: {
-      actions: [{ action: 'tags_replace', item_id: id, tags, ...actionInfo }]
-    }
-  }).then(response => {
-    return response
-      ? { status: 'ok', response: response.action_results[0] }
-      : undefined
+export function syncItemTags(rkey, userId, url, tags) {
+    return request({
+      path: 'com.atproto.repo.putRecord',
+      data: {
+          repo: userId,
+          collection: "com.habitat.pouch.link",
+          rkey: rkey,
+          record: {
+              url: url,
+              createdAt: new Date().toISOString(),
+              tags: tags,
+          }
+        }
+    }).then(response => {
+      console.log("RESPONSE: ", response);
+      return response
+        ? { status: 'ok', response }
+        : undefined
   })
 }
 

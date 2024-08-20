@@ -31,9 +31,15 @@ export function closeLoginPage() {
   )
 }
 
+function getRkeyFromURI(uri) {
+  const parts = uri.split('/');
+  return parts[parts.length - 1];
+}
+
 export function deriveItemData(item) {
   return {
-    itemId: item?.item_id,
+    itemId: getRkeyFromURI(item.uri),
+    url: item?.url,
     title: displayTitle(item),
     thumbnail: displayThumbnail(item),
     publisher: displayPublisher(item)

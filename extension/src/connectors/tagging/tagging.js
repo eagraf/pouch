@@ -14,7 +14,7 @@ export const TaggingConnector = ({ closePanel }) => {
   const [suggestedTags, setSuggestedTags] = useState([])
   const [usedTags, setUsedTags] = useState([])
   const [markedTags, setMarkedTags] = useState([])
-  const [itemId, setItemId] = useState(null)
+  const [item, setItem] = useState(null)
 
   useEffect(async () => {
     const storedTagsString = await getSetting('tags_stored')
@@ -40,7 +40,7 @@ export const TaggingConnector = ({ closePanel }) => {
 
       case UPDATE_ITEM_PREVIEW: {
         const { item } = payload
-        setItemId(item?.itemId)
+        setItem(item)
         return
       }
 
@@ -58,7 +58,8 @@ export const TaggingConnector = ({ closePanel }) => {
   const submitChanges = (usedDraft) => {
     const usedSuggested = usedDraft.filter(usedTag => suggestedTags.includes(usedTag))
     const payload = {
-      item_id: itemId,
+      item_id: item.itemId,
+      url: item.url,
       tags: usedDraft,
       suggestedCount: suggestedTags.length,
       usedSuggestedCount: usedSuggested

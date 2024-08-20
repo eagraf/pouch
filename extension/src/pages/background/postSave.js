@@ -9,11 +9,11 @@ import { SUGGESTED_TAGS_SUCCESS } from 'actions'
 
 /* On successful save
 –––––––––––––––––––––––––––––––––––––––––––––––––– */
-export async function saveSuccess(tabId, payload) {
+export async function saveSuccess(tabId, payload, isLink) {
   // Update toolbar icon
-  const { resolved_url, given_url, isLink } = payload
+  //const { resolved_url, given_url, isLink } = payload
   // fetch image and title from above
-  const url = resolved_url || given_url //eslint-disable-line
+  //const url = resolved_url || given_url //eslint-disable-line
 
   if (!isLink) setToolbarIcon(tabId, true)
 
@@ -21,10 +21,10 @@ export async function saveSuccess(tabId, payload) {
   getItemPreview(tabId, payload)
 
   // Get list of users tags for typeahead
-  getStoredTags(tabId)
+  //getStoredTags(tabId)
 
   // Premium: Request suggested tags
-  getTagSuggestions(url, tabId)
+  //getTagSuggestions(url, tabId)
 }
 
 /* Derive item preview from save response
