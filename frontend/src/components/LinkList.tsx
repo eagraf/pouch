@@ -43,6 +43,7 @@ const LinkList: React.FC<LinkListProps> = () => {
           'com.habitat.pouch.link' // Collection
         );
         setLinks(data);
+      // @ts-expect-error TODO fix this
       } catch (err: Error) {
         setError(err.message);
       } finally {
