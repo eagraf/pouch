@@ -2,8 +2,7 @@ import React, { useState, useEffect } from 'react';
 import './LinkList.css';
 import Cookies from 'js-cookie';
 import { LinkRecord } from '../types/LinkTypes';
-import fetchLinks from '../api/api';
-
+import { fetchLinksV2 } from '../api/api';
 interface Link {
   id: number;
   url: string;
@@ -38,10 +37,7 @@ const LinkList: React.FC<LinkListProps> = () => {
         if (!userDID) {
           throw new Error('User DID not found.');
         }
-        const data = await fetchLinks(
-          userDID!, 
-          'com.habitat.pouch.link' // Collection
-        );
+        const data = await fetchLinksV2();
         setLinks(data);
       // @ts-expect-error TODO fix this
       } catch (err: Error) {
@@ -114,12 +110,12 @@ const LinkList: React.FC<LinkListProps> = () => {
               ))}
           </div>
           <div className="link-date">
-            {new Date(link.value.createdAt).toLocaleString(undefined, {
+            {new Date(link.value.created_at).toLocaleDateString('en-US', {
               year: 'numeric',
               month: 'long',
               day: 'numeric',
               hour: '2-digit',
-              minute: '2-digit',
+              minute: '2-digit'
             })}
           </div>
         </li>
