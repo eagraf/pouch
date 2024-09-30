@@ -249,3 +249,10 @@ export async function setContextMenus() {
     })
   }
 }
+
+/* Configure the Habitat domain to target for sending data to.
+–––––––––––––––––––––––––––––––––––––––––––––––––– */
+export async function setHabitatDomain(tab, { habitat_domain }) {
+  console.log('Setting habitat domain', habitat_domain)
+  await setSettings({ habitat_domain })
+}

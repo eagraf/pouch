@@ -1,5 +1,3 @@
-import { CONSUMER_KEY, API_URL } from 'common/constants'
-import { Base64 } from 'js-base64'
 import { getSetting } from '../../interface'
 import { getAccessToken } from '../../helpers'
 
@@ -18,10 +16,13 @@ async function request(options, skipAuth) {
 
   if (!skipAuth) {
     const access_token = await getSetting('access_token')
-    console.log("ACCESS TOKEN", access_token);
     headers.append('Authorization', 'Bearer ' + access_token);
   }
+  if (options.token) {
+    headers.append('Authorization', 'Bearer ' + options.token);
+  }
 
+  const apiUrl = await getApiUrl();
 
   const fetchSettings = {
     method: 'POST',
@@ -29,7 +30,7 @@ async function request(options, skipAuth) {
     body: JSON.stringify(options.data),
   }
 
-  return fetch(API_URL + options.path, fetchSettings)
+  return fetch(apiUrl + options.path, fetchSettings)
     .then(handleErrors)
     .then(handleSuccess)
 }
@@ -51,7 +52,9 @@ async function getRequest(options, skipAuth) {
     headers: headers,
   }
 
-  return fetch(API_URL + options.path, fetchSettings)
+  const apiUrl = await getApiUrl();
+
+  return fetch(apiUrl + options.path, fetchSettings)
     .then(handleErrors)
     .then(handleSuccess)
 }
@@ -68,6 +71,11 @@ function handleErrors(response) {
 
 function handleSuccess(response) {
   return response ? response.json() : false
+}
+
+async function getApiUrl() {
+  const habitat_domain = await getSetting('habitat_domain')
+  return `https://${habitat_domain}/`
 }
 
 export { request, getRequest }

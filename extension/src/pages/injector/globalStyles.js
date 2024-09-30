@@ -201,3 +201,11 @@ export const radioStyles = css`
     }
   }
 `
+
+export const inputStyles = css`
+  input[type='text'] {
+    border: 1px solid var(--color-formFieldBorder);
+    border-radius: 4px;
+    padding: 8px;
+  }
+`

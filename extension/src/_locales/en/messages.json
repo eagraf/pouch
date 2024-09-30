@@ -121,5 +121,8 @@
   },
   "options_terms": {
     "message": "Terms of service"
+  },
+  "options_habitat_domain_title": {
+    "message": "Habitat Domain"
   }
 }

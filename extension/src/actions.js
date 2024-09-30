@@ -31,3 +31,5 @@ export const SEND_TAG_ERROR = 'SEND_TAG_ERROR'
 export const UPDATE_TAG_ERROR = 'UPDATE_TAG_ERROR'
 
 export const USER_LOG_IN = 'USER_LOG_IN'
+
+export const SET_HABITAT_DOMAIN = 'SET_HABITAT_DOMAIN'

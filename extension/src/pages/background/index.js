@@ -19,6 +19,7 @@ import { OPEN_POCKET } from 'actions'
 import { OPEN_OPTIONS } from 'actions'
 import { COLOR_MODE_CHANGE } from 'actions'
 import { SEND_TAG_ERROR } from 'actions'
+import { SET_HABITAT_DOMAIN } from 'actions'
 
 /* Initial Setup
 –––––––––––––––––––––––––––––––––––––––––––––––––– */

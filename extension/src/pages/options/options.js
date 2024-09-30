@@ -12,7 +12,8 @@ import { FacebookIcon } from 'components/icons/icons'
 import { TwitterIcon } from 'components/icons/icons'
 import { InstagramIcon } from 'components/icons/icons'
 import { PocketLogoIcon } from 'components/icons/icons'
-import { radioStyles } from '../injector/globalStyles'
+import { radioStyles, inputStyles } from '../injector/globalStyles'
+import { SET_HABITAT_DOMAIN } from '../../actions'
 
 const container = css`
   color: var(--color-textPrimary);
@@ -148,11 +149,12 @@ const OptionsApp = () => {
   const [storedTheme, setStoredTheme] = useState('light')
   const [accessToken, setAccessToken] = useState()
   const [userName, setUserName] = useState()
+  const [habitatDomain, setHabitatDomain] = useState()
 
   useEffect(async () => {
     updateTheme(await getSetting('theme') || 'system')
     setAccessToken(await getSetting('access_token'))
-    setUserName(await getSetting('username'))
+    setUserName(await getSetting('user_id'))
   }, [])
 
   const setShortcuts = () => openTabWithUrl(SET_SHORTCUTS)
@@ -169,8 +171,12 @@ const OptionsApp = () => {
     htmlTag?.classList.toggle(`pocket-theme-dark`, newTheme === 'dark')
   }
 
+  const updateHabitatDomain = (domain) => {
+    chrome.runtime.sendMessage({ type: SET_HABITAT_DOMAIN, payload: { habitat_domain: domain } })
+  }
+
   return (
-    <div className={cx('pocket-extension', radioStyles, container)}>
+    <div className={cx('pocket-extension', radioStyles, inputStyles, container)}>
       <section className={wrapper}>
         <header className={header}>
           <Logo />
@@ -196,6 +202,19 @@ const OptionsApp = () => {
                 {chrome.i18n.getMessage('options_log_in')}
               </Button>
             )}
+          </div>
+        </div>
+
+        <div className={section}>
+          <div className={sectionLabel}>
+            {chrome.i18n.getMessage('options_habitat_domain_title')}
+          </div>
+          <div className={sectionAction}>
+            <input
+              type="text"
+              value={habitatDomain}
+              onChange={(e) => updateHabitatDomain(e.target.value)}
+            />
           </div>
         </div>
 
