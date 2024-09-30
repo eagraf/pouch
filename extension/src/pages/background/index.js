@@ -1,8 +1,8 @@
 import * as handle from './userActions'
 import { setDefaultIcon } from 'common/interface'
 import * as Sentry from '@sentry/browser'
-import { Integrations } from '@sentry/tracing'
-
+import { refreshSession } from 'common/api/auth/authorize'
+import { getSetting, setSettings } from 'common/interface'
 Sentry.init({
   dsn: 'https://11eed553982148d5b0b0288798aa3d85@o28549.ingest.sentry.io/6120053',
   tracesSampleRate: 0,
@@ -86,7 +86,44 @@ chrome.runtime.onMessage.addListener(function (message, sender) {
     case OPEN_OPTIONS:
       handle.openOptionsPage()
       return
+    case SET_HABITAT_DOMAIN:
+      handle.setHabitatDomain(tab, payload)
+      return
     default:
       return Promise.resolve(`Message received: ${type}`)
   }
 })
+
+
+// Set up an alarm to check and refresh the token periodically
+// The access token expires after 2 hours, so let's refresh it one
+// minute before it expires
+chrome.alarms.create('refreshToken', { periodInMinutes: 119});
+
+
+chrome.alarms.onAlarm.addListener((alarm) => {
+  if (alarm.name === 'refreshToken') {
+    console.log('Refreshing tokens...');
+    refresh();
+  }
+});
+
+async function refresh() {
+  const refreshToken = await getSetting('refresh_token');
+
+
+  const resp = await refreshSession({
+      'refresh_token': refreshToken,
+    })
+
+    if (resp && resp.accessJwt && resp.refreshJwt) {
+
+        setSettings({
+          access_token: resp.accessJwt,
+          refresh_token: resp.refreshJwt,
+        })
+
+    } else {
+        console.error('Failed to refresh tokens');
+    }
+}

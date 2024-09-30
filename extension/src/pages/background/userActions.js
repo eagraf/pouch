@@ -150,8 +150,7 @@ export async function authCodeRecieved(tab, payload) {
     // TODO check the result of authorize
     const authResponse = await authorize(payload)
 
-    const { user_id, token } = payload;
-    setSettings({ access_token: token, user_id })
+    setSettings(payload);
   } catch (err) {
     console.log(err);
   }

@@ -54,7 +54,8 @@
     "tabs",
     "contextMenus",
     "cookies",
-    "storage"
+    "storage",
+    "alarms"
   ],
   "commands": {
     "save-to-pocket-action": {

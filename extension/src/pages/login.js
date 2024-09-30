@@ -1,4 +1,5 @@
 import { sendMessage } from 'common/interface'
+import { getCookies } from 'common/helpers'
 import { AUTH_CODE_RECEIVED } from 'actions'
 
 // Check page has loaded and if not add listener for it
@@ -12,7 +13,7 @@ async function setLoginLoaded() {
   try {
     const siteCookies = getCookies(document.cookie)
 
-    if (!siteCookies['chrome_extension_user_id'] || !siteCookies['chrome_extension_access_token']) {
+    if (!siteCookies['chrome_extension_user_id'] || !siteCookies['chrome_extension_access_token'] || !siteCookies['chrome_extension_refresh_token']) {
       console.groupCollapsed('Auth Error')
       console.log({
         user_id: siteCookies['chrome_extension_user_id'],
@@ -23,7 +24,9 @@ async function setLoginLoaded() {
 
     const loginMessage = {
       user_id: siteCookies['chrome_extension_user_id'],
-      token: siteCookies['chrome_extension_access_token'],
+      habitat_domain: siteCookies['habitat_domain'],
+      access_token: siteCookies['chrome_extension_access_token'],
+      refresh_token: siteCookies['chrome_extension_refresh_token'],
     }
 
     // This time out is for user experience so they don't get a flash of
@@ -37,20 +40,4 @@ async function setLoginLoaded() {
   } catch (err) {
     console.log('Unexpected login error', err)
   }
-}
-
-/* UTILITIES
-–––––––––––––––––––––––––––––––––––––––––––––––––– */
-function getCookies(cookieString) {
-  if (!cookieString || cookieString === '') return {}
-  return cookieString
-    .split(';')
-    .map((x) => x.trim().split(/(=)/))
-    .reduce(
-      (cookiesObject, currentArray) => ({
-        ...cookiesObject,
-        [currentArray[0]]: decodeURIComponent(currentArray[2]),
-      }),
-      {},
-    )
 }
