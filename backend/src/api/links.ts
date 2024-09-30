@@ -1,4 +1,5 @@
 import express from 'express';
+import axios from 'axios';
 import sqlite3 from 'sqlite3';
 import { open } from 'sqlite';
 
@@ -47,5 +48,58 @@ router.get('/', async (req, res) => {
     res.status(500).json({ error: 'Internal server error' });
   }
 });
+
+router.post('/', async (req, res) => {
+  try {
+    const { uri, userDid } = req.body;
+    if (!uri || !userDid) {
+      return res.status(400).json({ error: 'Missing uri or userDid in request body' });
+    }
+
+
+    const db = await open({
+      filename: './database.sqlite',
+      driver: sqlite3.Database,
+    });
+
+    // TODO Get the user's DID from the session
+
+    // Prepare the record to be created
+    const record = {
+      $type: 'com.habitat.pouch.link',
+      url: uri,
+      createdAt: new Date().toISOString(),
+    };
+
+    // Make a request to the PDS to create the record
+    try {
+      const response = await axios.post(`https://${req.hostname}/xrpc/com.atproto.repo.createRecord`, {
+        repo: userDid,
+        collection: 'com.habitat.pouch.link',
+        record: record,
+      }, {
+        headers: {
+          // TODO just pass through the authorization from the frontend request to the PDS.
+          'Authorization': req.headers.authorization,
+        },
+      });
+
+      // If successful, return the created record
+      res.status(201).json(response.data);
+    } catch (error) {
+      console.error('Error creating record in PDS:', error);
+      res.status(500).json({ error: 'Failed to create record in PDS' });
+    }
+
+    await db.close();
+
+  } catch (error) {
+    console.error('Error adding tag:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+
+
 
 export default router;

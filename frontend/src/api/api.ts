@@ -1,44 +1,6 @@
 import Cookies from 'js-cookie';
 import { LinkRecord } from '../types/LinkTypes';
 
-export async function fetchLinks(
-  repo: string,
-  collection: string,
-): Promise<LinkRecord[]> {
-    const token = Cookies.get('access_token');
-    const habitatDomain = Cookies.get('habitat_domain');
-    console.log("COOKIE " + document.cookie);
-    Cookies.set('abcd', "123");
-  
-    console.log("AHGH");
-    if (!token) {
-        throw new Error('Authentication token not found.');
-    }
-
-    const url = `https://${habitatDomain}/xrpc/com.atproto.repo.listRecords?repo=${encodeURIComponent(repo)}&collection=${encodeURIComponent(collection)}`;
-    console.log(url);
-
-    try {
-        const response = await fetch(url, {
-            method: 'GET',
-            headers: {
-                'Authorization': `Bearer ${token}`,
-                'Content-Type': 'application/json',
-            },
-        });
-
-        if (!response.ok) {
-            throw new Error(`Error: ${response.statusText}`);
-        }
-
-        const data = await response.json();
-
-        return data.records
-    } catch (error) {
-        console.error('Error fetching links:', error);
-        throw error;
-    }
-}
 
 export async function fetchLinksV2(): Promise<LinkRecord[]> {
     const token = Cookies.get('access_token');
@@ -85,3 +47,34 @@ export async function fetchLinksV2(): Promise<LinkRecord[]> {
     }
 }
 
+export async function addTagToLink(uri: string, tag: string): Promise<void> {
+    const token = Cookies.get('access_token');
+    const habitatDomain = Cookies.get('habitat_domain');
+
+    if (!token) {
+        throw new Error('Authentication token not found.');
+    }
+
+    const url = `https://${habitatDomain}/pouch_api/api/v1/tag`;
+
+    try {
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ uri, tag }),
+        });
+
+        if (!response.ok) {
+            throw new Error(`Error: ${response.statusText}`);
+        }
+
+        const data = await response.json();
+        console.log('Tag added successfully:', data);
+    } catch (error) {
+        console.error('Error adding tag:', error);
+        throw error;
+    }
+}

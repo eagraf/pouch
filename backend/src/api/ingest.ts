@@ -175,21 +175,4 @@ router.post<{}, IngestResponse>('/', (req, res) => {
   }
 });
 
-router.get('/links', async (req, res) => {
-  try {
-    const db = await open({
-      filename: './database.sqlite',
-      driver: sqlite3.Database,
-    });
-
-    const links = await db.all('SELECT * FROM links ORDER BY created_at DESC');
-    await db.close();
-
-    res.json(links);
-  } catch (error) {
-    console.error('Error fetching links:', error);
-    res.status(500).json({ error: 'Internal server error' });
-  }
-});
-
 export default router;

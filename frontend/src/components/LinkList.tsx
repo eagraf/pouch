@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import './LinkList.css';
 import Cookies from 'js-cookie';
 import { LinkRecord } from '../types/LinkTypes';
-import { fetchLinksV2 } from '../api/api';
+import { addTagToLink, fetchLinksV2 } from '../api/api';
 interface Link {
   id: number;
   url: string;
@@ -81,6 +81,23 @@ const LinkList: React.FC<LinkListProps> = () => {
     return Array.from(tagSet);
   };
 
+  const handleAddTag = async (linkUrl: string, newTag: string) => {
+    // TODO: Implement the logic to add a new tag to a link
+    console.log(`Adding tag ${newTag} to link ${linkUrl}`);
+    try {
+      await addTagToLink(linkUrl, newTag);
+      console.log(`Successfully added tag ${newTag} to link ${linkUrl}`);
+      
+      // Force a re-render by fetching updated links
+      const updatedLinks = await fetchLinksV2();
+      setLinks(updatedLinks);
+    } catch (error) {
+      console.error('Error adding tag:', error);
+      // Optionally, you can set an error state here to display to the user
+    }
+  };
+
+
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error}</p>;
 
@@ -101,27 +118,65 @@ const LinkList: React.FC<LinkListProps> = () => {
         <ul className="link-list">
         {filteredLinks.map((link, index) => (
           <li key={index} className="link-item">
-          <a href={link.value.url} target="_blank" rel="noopener noreferrer" className="link-title">
-            {link.value.url}
-          </a>
-          <div className="link-tags">
-              { link.value.tags && link.value.tags.map((tag, tagIndex) => (
+            <a href={link.value.url} target="_blank" rel="noopener noreferrer" className="link-title">
+              {link.value.url}
+            </a>
+            <div className="link-tags">
+              {link.value.tags && link.value.tags.map((tag, tagIndex) => (
                 <span key={tagIndex} className="link-tag">{tag}</span>
               ))}
-          </div>
-          <div className="link-date">
-            {new Date(link.value.created_at).toLocaleDateString('en-US', {
-              year: 'numeric',
-              month: 'long',
-              day: 'numeric',
-              hour: '2-digit',
-              minute: '2-digit'
-            })}
-          </div>
-        </li>
+              <AddTagButton link={link} onAddTag={handleAddTag} />
+            </div>
+            <div className="link-date">
+              {new Date(link.value.created_at).toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+              })}
+            </div>
+          </li>
         ))}
         </ul>
     </div>
+  );
+};
+
+interface AddTagButtonProps {
+  link: LinkRecord;
+  onAddTag: (linkId: string, newTag: string) => void;
+}
+
+const AddTagButton: React.FC<AddTagButtonProps> = ({ link, onAddTag }) => {
+  const [isAdding, setIsAdding] = useState(false);
+  const [newTag, setNewTag] = useState('');
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (newTag.trim()) {
+      onAddTag(link.value.url, newTag.trim());
+      setNewTag('');
+      setIsAdding(false);
+    }
+  };
+
+  return (
+    <>
+      {isAdding ? (
+        <form onSubmit={handleSubmit}>
+          <input
+            type="text"
+            value={newTag}
+            onChange={(e) => setNewTag(e.target.value)}
+            placeholder="New tag"
+          />
+          <button type="submit">Add</button>
+        </form>
+      ) : (
+        <button onClick={() => setIsAdding(true)}>+</button>
+      )}
+    </>
   );
 };
 
