@@ -4,7 +4,7 @@ export const AUTH_URL =
   TS_NET_URL + "/login?redirectRoute=/extension_login_success&source=chrome_extension";
 export const LOGOUT_URL = TS_NET_URL + "/extension_logout";
 export const SET_SHORTCUTS = 'chrome://extensions/configureCommands';
-export const API_URL = TS_NET_URL + '/xrpc/';
+export const API_URL = TS_NET_URL + '/';
 export const POCKET_LIST = TS_NET_URL + '/pouch';
 export const POCKET_HOME = TS_NET_URL;
 export const CONSUMER_KEY = '__consumerKey__';

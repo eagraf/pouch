@@ -11,14 +11,11 @@ if (document.readyState === 'loading') {
 
 async function setLoginLoaded() {
   try {
+    console.log("LOGGING IN");
     const siteCookies = getCookies(document.cookie)
 
     if (!siteCookies['chrome_extension_user_id'] || !siteCookies['chrome_extension_access_token'] || !siteCookies['chrome_extension_refresh_token']) {
       console.groupCollapsed('Auth Error')
-      console.log({
-        user_id: siteCookies['chrome_extension_user_id'],
-        token: siteCookies['chrome_extension_access_token']
-      })
       console.groupEnd('Auth Error')
     }
 

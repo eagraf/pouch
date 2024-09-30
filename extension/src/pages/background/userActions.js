@@ -128,7 +128,7 @@ export async function tagsSyncAction(tab, payload) {
   chrome.tabs.sendMessage(tabId, { action: TAG_SYNC_REQUEST })
 
   const user_id = await getSetting('user_id')
-  const { response } = await syncItemTags(item_id, user_id, url, tags)
+  const { response } = await syncItemTags(url, tags)
   const message = response
     ? { action: TAG_SYNC_SUCCESS, payload }
     : { action: TAG_SYNC_FAILURE, payload }

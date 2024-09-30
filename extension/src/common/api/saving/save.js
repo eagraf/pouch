@@ -4,15 +4,11 @@ import { request } from '../_request/request'
 –––––––––––––––––––––––––––––––––––––––––––––––––– */
 export function saveToPocket(saveObject, userId) {
   return request({
-    path: 'com.atproto.repo.createRecord',
+    path: "pouch_api/api/v1/links",
     data: {
-        repo: userId,
-        collection: "com.habitat.pouch.link",
-        record: {
-            url: saveObject.url,
-            createdAt: new Date().toISOString(),
-        }
-      }
+      uri: saveObject.url,
+      userDid: userId, // TODO this info should be included as part of the session
+    }
   }).then(response => {
     return response
       ? { saveObject, status: 'ok', response }

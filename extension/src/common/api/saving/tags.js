@@ -12,21 +12,14 @@ export function getOnSaveTags(url) {
   }).then(response => response)
 }
 
-export function syncItemTags(rkey, userId, url, tags) {
+export function syncItemTags(url, tags) {
     return request({
-      path: 'com.atproto.repo.putRecord',
+      path: 'pouch_api/api/v1/tag',
       data: {
-          repo: userId,
-          collection: "com.habitat.pouch.link",
-          rkey: rkey,
-          record: {
-              url: url,
-              createdAt: new Date().toISOString(),
-              tags: tags,
-          }
+            uri: url,
+            tag: tags[0], // TODO: support multiple tags
         }
     }).then(response => {
-      console.log("RESPONSE: ", response);
       return response
         ? { status: 'ok', response }
         : undefined
