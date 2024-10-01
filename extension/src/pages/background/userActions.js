@@ -5,19 +5,10 @@ import { getSetting, setSettings } from 'common/interface'
 import { closeLoginPage } from 'common/helpers'
 import { setToolbarIcon } from 'common/interface'
 import { localize } from 'common/locales'
-
 import { authorize } from 'common/api'
-import { getGuid } from 'common/api'
 import { saveToPocket } from 'common/api'
 import { syncItemTags } from 'common/api'
 import { removeItem } from 'common/api'
-
-import {
-  AUTH_URL,
-  LOGOUT_URL,
-  POCKET_HOME,
-  POCKET_LIST,
-} from 'common/constants'
 
 import { SAVE_TO_POCKET_REQUEST } from 'actions'
 import { SAVE_TO_POCKET_SUCCESS } from 'actions'
@@ -32,13 +23,14 @@ import { REMOVE_ITEM_SUCCESS } from 'actions'
 import { REMOVE_ITEM_FAILURE } from 'actions'
 
 import { UPDATE_TAG_ERROR } from 'actions'
+import { getLoginUrl, getLogoutUrl, getPouchUrl, getHabitatUrl } from '../../common/helpers'
 
 var postAuthSave = null
 
 /* Browser Action - Toolbar Icon Clicked
 –––––––––––––––––––––––––––––––––––––––––––––––––– */
 export function browserAction(tab) {
-  if (isSystemPage(tab)) return openPocketHome() // open list on non-standard pages
+  if (isSystemPage(tab)) return openHabitatHome() // open list on non-standard pages
 
   const { id: tabId, title, url: pageUrl } = tab
 
@@ -51,13 +43,13 @@ export function contextClick(info, tab) {
   const { menuItemId, linkUrl, pageUrl } = info
   const { id: tabId, title } = tab
 
-  if (menuItemId === 'toolbarContextClickHome') return openPocketHome()
-  if (menuItemId === 'toolbarContextClickList') return openPocketList()
+  if (menuItemId === 'toolbarContextClickHome') return openHabitatHome()
+  if (menuItemId === 'toolbarContextClickList') return openPouch()
   if (menuItemId === 'toolbarContextClickLogOut') return logOut()
   if (menuItemId === 'toolbarContextClickLogIn') return logIn()
 
   // Open list on non-standard pages/links
-  if (isSystemLink(linkUrl || pageUrl)) return openPocketHome()
+  if (isSystemLink(linkUrl || pageUrl)) return openPouch()
 
   return save({ linkUrl, pageUrl, title, tabId })
 }
@@ -163,7 +155,11 @@ export async function authCodeRecieved(tab, payload) {
 }
 
 export function logOut() {
-  chrome.tabs.create({ url: LOGOUT_URL })
+  getLogoutUrl().then(
+    (url) => {
+      chrome.tabs.create({ url })
+    }
+  )
 }
 
 export function loggedOutOfPocket() {
@@ -173,19 +169,23 @@ export function loggedOutOfPocket() {
 
 export function logIn(saveObject) {
   postAuthSave = saveObject
-  chrome.tabs.create({ url: AUTH_URL })
+  getLoginUrl().then(
+    (url) => {
+      chrome.tabs.create({ url })
+    }
+  )
 }
 
-export function openPocket() {
-  chrome.tabs.create({ url: POCKET_LIST })
+export function openPouch() {
+  getPouchUrl().then((url) => {
+    chrome.tabs.create({ url })
+  })
 }
 
-export function openPocketList() {
-  chrome.tabs.create({ url: POCKET_LIST })
-}
-
-export function openPocketHome() {
-  chrome.tabs.create({ url: POCKET_HOME })
+export function openHabitatHome() {
+  getHabitatUrl().then((url) => {
+    chrome.tabs.create({ url })
+  })
 }
 
 export function openOptionsPage() {

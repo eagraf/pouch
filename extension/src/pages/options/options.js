@@ -2,16 +2,13 @@ import ReactDOM from 'react-dom'
 import React, { useEffect, useState } from 'react'
 import { css, cx } from 'linaria'
 import { openTabWithUrl } from 'common/interface'
-import { AUTH_URL, LOGOUT_URL, SET_SHORTCUTS } from 'common/constants'
+import { SET_SHORTCUTS } from 'common/constants'
 import { getSetting } from 'common/interface'
 import { COLOR_MODE_CHANGE } from 'actions'
-import { getOSModeClass } from 'common/helpers'
+import { getOSModeClass, getLoginUrl, getLogoutUrl } from 'common/helpers'
 import { Logo } from 'components/logo/logo'
 import { Button } from 'components/button/extensions-button'
-import { FacebookIcon } from 'components/icons/icons'
-import { TwitterIcon } from 'components/icons/icons'
-import { InstagramIcon } from 'components/icons/icons'
-import { PocketLogoIcon } from 'components/icons/icons'
+import { FacebookIcon, TwitterIcon, InstagramIcon, PocketLogoIcon } from 'components/icons/icons'
 import { radioStyles, inputStyles } from '../injector/globalStyles'
 import { SET_HABITAT_DOMAIN } from '../../actions'
 
@@ -150,16 +147,35 @@ const OptionsApp = () => {
   const [accessToken, setAccessToken] = useState()
   const [userName, setUserName] = useState()
   const [habitatDomain, setHabitatDomain] = useState()
+  const [completedInitialSetup, setCompletedInitialSetup] = useState(false)
 
   useEffect(async () => {
-    updateTheme(await getSetting('theme') || 'system')
-    setAccessToken(await getSetting('access_token'))
-    setUserName(await getSetting('user_id'))
+    const initialSetupCompleted = await getSetting('completed_initial_setup')
+    setCompletedInitialSetup(initialSetupCompleted)
+
+    if (initialSetupCompleted) {
+      updateTheme(await getSetting('theme') || 'system')
+      setAccessToken(await getSetting('access_token'))
+      setUserName(await getSetting('user_id'))
+      setHabitatDomain(await getSetting('habitat_domain'))
+    }
   }, [])
 
   const setShortcuts = () => openTabWithUrl(SET_SHORTCUTS)
-  const logoutAction = () => openTabWithUrl(LOGOUT_URL)
-  const loginAction = () => openTabWithUrl(AUTH_URL)
+  const logoutAction = () => {
+    getLogoutUrl().then(
+      (url) => {
+        openTabWithUrl(url)
+      }
+    )
+  }
+  const loginAction = () => {
+    getLoginUrl().then(
+      (url) => {
+        openTabWithUrl(url)
+      }
+    )
+  }
 
   const updateTheme = (mode) => {
     chrome.runtime.sendMessage({ type: COLOR_MODE_CHANGE, payload: { theme: mode } })
@@ -171,8 +187,51 @@ const OptionsApp = () => {
     htmlTag?.classList.toggle(`pocket-theme-dark`, newTheme === 'dark')
   }
 
-  const updateHabitatDomain = (domain) => {
-    chrome.runtime.sendMessage({ type: SET_HABITAT_DOMAIN, payload: { habitat_domain: domain } })
+  const updateHabitatDomain = async (domain) => {
+    await chrome.runtime.sendMessage({ type: SET_HABITAT_DOMAIN, payload: { habitat_domain: domain } })
+    setHabitatDomain(domain)
+  }
+
+  const completedInitialDomainSetup = async () => {
+    // TODO validate the domain.
+
+    
+    await chrome.storage.local.set({ 'completed_initial_setup': true })
+
+    
+    setCompletedInitialSetup(true)
+  }
+
+  if (!completedInitialSetup) {
+    return (
+      <div className={cx('pocket-extension', radioStyles, inputStyles, container)}>
+        <section className={wrapper}>
+          <header className={header}>
+            <Logo />
+            <h1 className={title}>
+              {chrome.i18n.getMessage('welcome_header')}
+            </h1>
+          </header>
+
+          <div className={section}>
+            <div className={sectionLabel}>
+              {chrome.i18n.getMessage('options_habitat_domain_title')}
+            </div>
+            <div className={sectionAction}>
+              <input
+                type="text"
+                value={habitatDomain}
+                onChange={(e) => updateHabitatDomain(e.target.value)}
+              />
+            </div>
+          </div>
+
+          <Button type='primary' onClick={completedInitialDomainSetup}>
+            {chrome.i18n.getMessage('welcome_complete_setup')}
+          </Button>
+        </section>
+      </div>
+    )
   }
 
   return (

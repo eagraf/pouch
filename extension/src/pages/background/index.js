@@ -28,6 +28,9 @@ chrome.runtime.onInstalled.addListener(function () {
   setDefaultIcon()
 
   handle.setContextMenus()
+
+  // Open the options page
+  handle.openOptionsPage()
 })
 
 /* Browser Action - Toolbar
@@ -81,7 +84,7 @@ chrome.runtime.onMessage.addListener(function (message, sender) {
       handle.setColorMode(tab, payload)
       return
     case OPEN_POCKET:
-      handle.openPocket()
+      handle.openPouch()
       return
     case OPEN_OPTIONS:
       handle.openOptionsPage()

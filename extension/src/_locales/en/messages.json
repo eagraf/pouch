@@ -124,5 +124,11 @@
   },
   "options_habitat_domain_title": {
     "message": "Habitat Domain"
+  },
+  "welcome_header": {
+    "message": "Welcome to the Habitat Chrome Extension"
+  },
+  "welcome_complete_setup": {
+    "message": "Complete Setup"
   }
 }

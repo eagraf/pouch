@@ -1,4 +1,3 @@
-import { TS_NET_DOMAIN } from './constants'
 import { getSetting } from './interface'
 
 export function isSystemPage(tab) {
@@ -22,12 +21,15 @@ export function checkDuplicate(list, tagValue) {
 }
 
 export function closeLoginPage() {
-  console.log("CLOSING");
-  chrome.tabs.query(
-    { url: '*://' + TS_NET_DOMAIN + '/extension_login_success*' },
-    (tabs) => {
-      chrome.tabs.remove(tabs.map((tab) => tab.id))
-    },
+  getSetting('habitat_domain').then(
+    (habitatDomain) => {
+      chrome.tabs.query(
+        { url: '*://' + habitatDomain + '/extension_login_success*' },
+        (tabs) => {
+          chrome.tabs.remove(tabs.map((tab) => tab.id))
+        },
+      )
+    }
   )
 }
 
@@ -137,4 +139,44 @@ export function getCookies(cookieString) {
     ...cookiesObject,
     [currentArray[0]]: decodeURIComponent(currentArray[2])
   }), {});
+}
+
+
+/*
+ * Helpers for getting URLs dependent on the habitat domain
+ */
+export function getLoginUrl() {
+  console.log("GETTING LOGIN URL")
+  return new Promise((resolve, reject) =>{
+    console.log("GETTING HABITAT DOMAIN")
+    getSetting('habitat_domain').then((habitatDomain) => {
+      console.log("HELLO")
+      resolve(`https://${habitatDomain}/login?redirectRoute=/extension_login_success&source=chrome_extension`)
+
+    })
+  })
+}
+
+export function getLogoutUrl() {
+  return new Promise((resolve, reject) => {
+    getSetting('habitat_domain').then((habitatDomain) => {
+      resolve(`https://${habitatDomain}/extension_logout`)
+    })
+  })
+}
+
+export function getPouchUrl() {
+  return new Promise((resolve, reject) => {
+    getSetting('habitat_domain').then((habitatDomain) => {
+      resolve(`https://${habitatDomain}/pouch`)
+    })
+  })
+}
+
+export function getHabitatUrl() {
+  return new Promise((resolve, reject) => {
+    getSetting('habitat_domain').then((habitatDomain) => {
+      resolve(`https://${habitatDomain}`)
+    })
+  })
 }
