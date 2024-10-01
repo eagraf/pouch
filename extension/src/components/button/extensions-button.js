@@ -9,7 +9,6 @@ const buttonStyles = css`
     font-family: var(--fontSansSerif);
     font-size: 16px;
     line-height: 110%;
-    border: none;
     border-radius: 0.25rem;
     margin: 0;
     padding: 8px 12px;
@@ -67,7 +66,7 @@ const buttonStyles = css`
 
   &.secondary {
     background: none;
-    border: 2px solid var(--color-actionSecondary);
+    border: 2px solid black;
     color: var(--color-actionSecondaryText);
 
     &:focus {
@@ -92,6 +91,7 @@ const buttonStyles = css`
     color: var(--color-inlineButton);
     font-size: 14px;
     font-weight: 500;
+    border: none;
 
     &:focus {
       outline: inherit;
@@ -104,6 +104,7 @@ const buttonStyles = css`
     &:hover {
       color: var(--color-inlineButtonHover);
     }
+
   }
 `
 

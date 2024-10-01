@@ -6,11 +6,132 @@ import { SET_SHORTCUTS } from 'common/constants'
 import { getSetting } from 'common/interface'
 import { COLOR_MODE_CHANGE } from 'actions'
 import { getOSModeClass, getLoginUrl, getLogoutUrl } from 'common/helpers'
-import { Logo } from 'components/logo/logo'
 import { Button } from 'components/button/extensions-button'
-import { FacebookIcon, TwitterIcon, InstagramIcon, PocketLogoIcon } from 'components/icons/icons'
 import { radioStyles, inputStyles } from '../injector/globalStyles'
 import { SET_HABITAT_DOMAIN } from '../../actions'
+
+const inputWrapper = css`
+  display: flex;
+  align-items: center;
+  width: 100%;
+  justify-content: space-between;
+`
+
+const inputGroup = css`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  flex-grow: 1;
+  margin-right: 12px;
+  padding-right: 12px;
+`
+
+const buttonGroup = css`
+  display: flex;
+  justify-content: flex-end;
+`
+
+const input = css`
+  flex-grow: 1;
+  padding: 8px 12px;
+  border: 1px solid black;
+  border-radius: 4px;
+  font-size: 16px;
+  width: 80%;
+  color: var(--color-textPrimary);
+  background-color: var(--color-backgroundPrimary);
+
+  &:focus {
+    outline: none;
+    border-color: var(--color-actionFocus);
+  }
+`
+
+const viewMode = css`
+  padding: 8px 0;
+  font-size: 16px;
+  color: var(--color-textPrimary);
+  margin-right: 12px;
+`
+
+const errorMessage = css`
+  color: red;
+  font-size: 14px;
+  margin-top: 5px;
+`
+
+const HabitatDomainInput = ({ initialValue, onSave, mode = 'edit' }) => {
+  const [isEditing, setIsEditing] = useState(mode === 'edit')
+  const [value, setValue] = useState(initialValue || '')
+  const [error, setError] = useState('')
+
+  useEffect(() => {
+    setValue(initialValue || '')
+  }, [initialValue])
+
+  const validate = (domain) => {
+    if (domain.startsWith('http://') || domain.startsWith('https://')) {
+      setError('Please enter the domain without http:// or https://')
+      return false
+    }
+    if (domain.endsWith('/')) {
+      setError('Please enter the domain without a trailing slash (/)')
+      return false
+    }
+    setError('')
+    return true
+  }
+
+  const handleChange = (e) => {
+    setValue(e.target.value)
+    validate(e.target.value)
+  }
+
+  const handleSave = () => {
+    if (validate(value)) {
+      onSave(value)
+      setIsEditing(false)
+    }
+  }
+
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      handleSave()
+    }
+  }
+
+  if (!isEditing) {
+    return (
+      <div className={cx(inputWrapper)}>
+        <div className={cx(inputGroup)}>
+          <span className={cx(viewMode)}>{value}</span>
+        </div>
+        <div className={cx(buttonGroup)}>
+          <Button type='inline' onClick={() => setIsEditing(true)}>Edit</Button>
+        </div>
+      </div>
+    )
+  }
+
+  return (
+    <div className={cx(inputWrapper)}>
+      <div className={cx(inputGroup)}>
+        <input
+          className={cx(input)}
+          value={value}
+          onChange={handleChange}
+          onKeyDown={handleKeyDown}
+          placeholder="Enter Habitat domain"
+        />
+        {error && <div className={cx(errorMessage)}>{error}</div>}
+      </div>
+      <div className={cx(buttonGroup)}>
+        <Button type='inline' onClick={handleSave}>Save</Button>
+      </div>
+    </div>
+  )
+}
+
 
 const container = css`
   color: var(--color-textPrimary);
@@ -63,82 +184,6 @@ const sectionAction = css`
 
   @media (max-width: 599px) {
     margin: 10px 0 0 20px;
-  }
-`
-const appIcon = css`
-  max-height: 40px;
-`
-const google = css`
-  margin-left: 10px;
-  height: 40px;
-  overflow: hidden;
-
-  img {
-    margin: -10px 0 0 -10px;
-    max-height: 60px;
-  }
-`
-const footer = css`
-  font-size: 16px;
-  margin-top: 40px;
-`
-const footerLinks = css`
-  display: flex;
-  justify-content: space-between;
-  margin-right: 100px;
-
-  @media (max-width: 479px) {
-    margin-right: 0;
-  }
-`
-const footerFollow = css`
-  display: flex;
-  flex-direction: column;
-`
-const footerFollowIcons = css`
-  margin-top: 20px;
-
-  .icon {
-    width: 25px;
-    height: 25px;
-    color: var(--color-textPrimary);
-  }
-
-  a + a  {
-    margin-left: 20px;
-  }
-`
-const footerCopyright = css`
-  display: flex;
-  align-items: center;
-  margin-top: 40px;
-
-  @media (max-width: 599px) {
-    flex-direction: column;
-    align-items: flex-start;
-
-    .icon {
-      margin-bottom: 10px;
-    }
-  }
-
-  .icon {
-    height: 25px;
-    margin-right: 20px;
-  }
-
-  span,
-  a {
-    margin-right: 15px;
-
-    &:last-child {
-      margin-right: 0;
-    }
-  }
-
-  p {
-    margin-top: 0;
-    margin-bottom: 10px;
   }
 `
 
@@ -207,7 +252,6 @@ const OptionsApp = () => {
       <div className={cx('pocket-extension', radioStyles, inputStyles, container)}>
         <section className={wrapper}>
           <header className={header}>
-            <Logo />
             <h1 className={title}>
               {chrome.i18n.getMessage('welcome_header')}
             </h1>
@@ -218,17 +262,17 @@ const OptionsApp = () => {
               {chrome.i18n.getMessage('options_habitat_domain_title')}
             </div>
             <div className={sectionAction}>
-              <input
-                type="text"
-                value={habitatDomain}
-                onChange={(e) => updateHabitatDomain(e.target.value)}
+              <HabitatDomainInput
+                initialValue={habitatDomain}
+                onSave={updateHabitatDomain}
               />
             </div>
           </div>
-
-          <Button type='primary' onClick={completedInitialDomainSetup}>
-            {chrome.i18n.getMessage('welcome_complete_setup')}
-          </Button>
+          <div className={section}>
+            <Button type='secondary' onClick={completedInitialDomainSetup}>
+              {chrome.i18n.getMessage('welcome_complete_setup')}
+            </Button>
+          </div>
         </section>
       </div>
     )
@@ -238,7 +282,6 @@ const OptionsApp = () => {
     <div className={cx('pocket-extension', radioStyles, inputStyles, container)}>
       <section className={wrapper}>
         <header className={header}>
-          <Logo />
           <h1 className={title}>
             {chrome.i18n.getMessage('options_header')}
           </h1>
@@ -269,10 +312,10 @@ const OptionsApp = () => {
             {chrome.i18n.getMessage('options_habitat_domain_title')}
           </div>
           <div className={sectionAction}>
-            <input
-              type="text"
-              value={habitatDomain}
-              onChange={(e) => updateHabitatDomain(e.target.value)}
+            <HabitatDomainInput
+              mode='view'
+              initialValue={habitatDomain}
+              onSave={updateHabitatDomain}
             />
           </div>
         </div>
@@ -287,135 +330,6 @@ const OptionsApp = () => {
             </Button>
           </div>
         </div>
-
-        <div className={section}>
-          <div className={sectionLabel}>
-            {chrome.i18n.getMessage('options_app_title')}
-          </div>
-          <div className={sectionAction}>
-            <a
-              href="https://apps.apple.com/us/app/pocket-save-read-grow/id309601447"
-              target="_blank"
-              rel="noopener noreferrer">
-              <img
-                className={appIcon}
-                src="https://assets.getpocket.com/web-ui/assets/apple-app-store-badge.2928664fe1fc6aca88583a6f606d60ba.svg"
-                alt={chrome.i18n.getMessage('options_app_apple')}
-              />
-            </a>
-            <a
-              className={google}
-              href="https://play.google.com/store/apps/details?id=com.ideashower.readitlater.pro"
-              target="_blank"
-              rel="noopener noreferrer">
-              <img
-                className={appIcon}
-                src="https://assets.getpocket.com/web-ui/assets/google-play-badge.db9b21a1c41f3dcd9731e1e7acfdbb57.png"
-                alt={chrome.i18n.getMessage('options_app_google')}
-              />
-            </a>
-          </div>
-        </div>
-
-        <div className={section}>
-          <div className={sectionLabel}>
-            {chrome.i18n.getMessage('options_theme_title')}
-          </div>
-          <div className={sectionAction}>
-            <div>
-              <input
-                id="light"
-                type="radio"
-                name="light"
-                onChange={() => updateTheme('light')}
-                checked={storedTheme === 'light'}
-              />
-              <label htmlFor="light">{chrome.i18n.getMessage('options_theme_light')}</label>
-            </div>
-            <div>
-              <input
-                id="dark"
-                type="radio"
-                name="dark"
-                onChange={() => updateTheme('dark')}
-                checked={storedTheme === 'dark'}
-              />
-              <label htmlFor="dark">{chrome.i18n.getMessage('options_theme_dark')}</label>
-            </div>
-            <div>
-              <input
-                id="system"
-                type="radio"
-                name="system"
-                onChange={() => updateTheme('system')}
-                checked={storedTheme === 'system'}
-              />
-              <label htmlFor="system">{chrome.i18n.getMessage('options_theme_system')}</label>
-            </div>
-          </div>
-        </div>
-
-        <footer className={footer}>
-          <div className={footerLinks}>
-            <a
-              href="https://help.getpocket.com/"
-              target="_blank"
-              rel="noopener noreferrer">
-              {chrome.i18n.getMessage('options_need_help')}
-            </a>
-            <a
-              href="https://getpocket.com/contact_support?field3=Question%20about%20Pocket%20Extension"
-              target="_blank"
-              rel="noopener noreferrer">
-              {chrome.i18n.getMessage('options_email_us')}
-            </a>
-            <div className={footerFollow}>
-              {chrome.i18n.getMessage('options_follow')}
-              <div className={footerFollowIcons}>
-                <a
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  href="https://www.facebook.com/pocket/">
-                  <FacebookIcon />
-                </a>
-                <a
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  href="https://twitter.com/pocket/">
-                  <TwitterIcon />
-                </a>
-                <a
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  href="https://www.instagram.com/pocket/">
-                  <InstagramIcon />
-                </a>
-              </div>
-            </div>
-          </div>
-
-          <div className={footerCopyright}>
-            <PocketLogoIcon />
-            <div>
-              <p dangerouslySetInnerHTML={{ __html: chrome.i18n.getMessage('options_family').replace('Mozilla', '<a href="https://mozilla.org/about/" rel="noopener noreferrer" target="_blank">Mozilla</a>')}}></p>
-              <div>
-                <span>&copy; {new Date().getFullYear()} Read It Later, Inc.</span>
-                <a
-                  href='https://getpocket.com/privacy/?src=extension'
-                  rel='noopener noreferrer'
-                  target='_blank'>
-                  {chrome.i18n.getMessage('options_privacy')}
-                </a>
-                <a
-                  href='https://getpocket.com/tos/?src=extension'
-                  rel='noopener noreferrer'
-                  target='_blank'>
-                  {chrome.i18n.getMessage('options_terms')}
-                </a>
-              </div>
-            </div>
-          </div>
-        </footer>
       </section>
     </div>
   )
