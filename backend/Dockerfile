@@ -23,7 +23,7 @@ RUN npm run build
 # RUN npm run build
 
 # Expose the port the app runs on
-ENV PORT=${PORT:-3000}
+ENV PORT=${PORT:-6000}
 EXPOSE $PORT
 
 # Define the command to run the app
