@@ -9,6 +9,8 @@ import { getOSModeClass, getLoginUrl, getLogoutUrl } from 'common/helpers'
 import { Button } from 'components/button/extensions-button'
 import { radioStyles, inputStyles } from '../injector/globalStyles'
 import { SET_HABITAT_DOMAIN } from '../../actions'
+import { getAccessToken } from 'common/helpers'
+import { LOCAL_STORAGE_KEY_USER_ID, LOCAL_STORAGE_KEY_HABITAT_DOMAIN } from 'common/constants'
 
 const inputWrapper = css`
   display: flex;
@@ -200,9 +202,9 @@ const OptionsApp = () => {
 
     if (initialSetupCompleted) {
       updateTheme(await getSetting('theme') || 'system')
-      setAccessToken(await getSetting('access_token'))
-      setUserName(await getSetting('user_id'))
-      setHabitatDomain(await getSetting('habitat_domain'))
+      setAccessToken(await getAccessToken())
+      setUserName(await getSetting(LOCAL_STORAGE_KEY_USER_ID))
+      setHabitatDomain(await getSetting(LOCAL_STORAGE_KEY_HABITAT_DOMAIN))
     }
   }, [])
 

@@ -15,7 +15,7 @@ async function request(options, skipAuth) {
   })
 
   if (!skipAuth) {
-    const access_token = await getSetting('access_token')
+    const access_token = await getAccessToken()
     headers.append('Authorization', 'Bearer ' + access_token);
   }
   if (options.token) {

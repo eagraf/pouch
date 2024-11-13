@@ -24,6 +24,12 @@ import { REMOVE_ITEM_FAILURE } from 'actions'
 
 import { UPDATE_TAG_ERROR } from 'actions'
 import { getLoginUrl, getLogoutUrl, getPouchUrl, getHabitatUrl } from '../../common/helpers'
+import {
+  LOCAL_STORAGE_KEY_ACCESS_TOKEN,
+  LOCAL_STORAGE_KEY_REFRESH_TOKEN,
+  LOCAL_STORAGE_KEY_USER_ID,
+} from '../../common/constants'
+import { getAccessToken } from '../../common/helpers'
 
 var postAuthSave = null
 
@@ -62,8 +68,8 @@ async function save({ linkUrl, pageUrl, title, tabId }) {
 
   try {
     // Are we authed?
-    const access_token = await getSetting('access_token')
-    const user_id = await getSetting('user_id')
+    const access_token = await getAccessToken()
+    const user_id = await getSetting(LOCAL_STORAGE_KEY_USER_ID)
     if (!access_token) return logIn({ linkUrl, pageUrl, title, tabId })
 
     const url = linkUrl || pageUrl
@@ -163,7 +169,11 @@ export function logOut() {
 }
 
 export function loggedOutOfPocket() {
-  chrome.storage.local.clear()
+  chrome.storage.local.remove([
+    LOCAL_STORAGE_KEY_ACCESS_TOKEN,
+    LOCAL_STORAGE_KEY_REFRESH_TOKEN,
+    LOCAL_STORAGE_KEY_USER_ID,
+  ])
   setContextMenus()
 }
 
@@ -233,7 +243,7 @@ export async function setContextMenus() {
   })
 
   // Log In or Out menu item depending on existence of access token
-  const access_token = await getSetting('access_token')
+  const access_token = await getSetting(LOCAL_STORAGE_KEY_ACCESS_TOKEN)
   if (access_token) {
     chrome.contextMenus.create({
       title: localize('context_menu_log_out'),

@@ -1,4 +1,5 @@
 import { getSetting } from './interface'
+import { LOCAL_STORAGE_KEY_ACCESS_TOKEN } from './constants'
 
 export function isSystemPage(tab) {
   return tab.active && isSystemLink(tab.url)
@@ -13,7 +14,7 @@ export function isSystemLink(link) {
 }
 
 export async function getAccessToken() {
-  return await getSetting('access_token')
+  return await getSetting(LOCAL_STORAGE_KEY_ACCESS_TOKEN)
 }
 
 export function checkDuplicate(list, tagValue) {

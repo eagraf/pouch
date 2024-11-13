@@ -1,5 +1,6 @@
 import * as handle from './userActions'
 import { setDefaultIcon } from 'common/interface'
+import { LOCAL_STORAGE_KEY_REFRESH_TOKEN } from 'common/constants'
 import * as Sentry from '@sentry/browser'
 import { refreshSession } from 'common/api/auth/authorize'
 import { getSetting, setSettings } from 'common/interface'
@@ -112,7 +113,7 @@ chrome.alarms.onAlarm.addListener((alarm) => {
 });
 
 async function refresh() {
-  const refreshToken = await getSetting('refresh_token');
+  const refreshToken = await getSetting(LOCAL_STORAGE_KEY_REFRESH_TOKEN);
 
 
   const resp = await refreshSession({
