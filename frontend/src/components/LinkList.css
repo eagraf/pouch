@@ -33,6 +33,10 @@
     text-decoration: none;
     display: block;
     margin-bottom: 5px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 100%;
 }
 
 .link-title:hover {
