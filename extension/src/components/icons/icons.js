@@ -5,7 +5,7 @@ import Error from './svg/Error'
 import FacebookMono from './svg/Facebook-Mono'
 import Instagram from './svg/Instagram'
 import ListView from './svg/List-View'
-import PocketLogo from './svg/PocketLogo'
+import Roo from './svg/Roo'
 import Settings from './svg/Settings'
 import TwitterMono from './svg/Twitter-Mono'
 
@@ -35,7 +35,7 @@ export const ListViewIcon = (props) => (
 
 export const PocketLogoIcon = (props) => (
   <Icon {...props}>
-    <PocketLogo />
+    <Roo />
   </Icon>
 )
 

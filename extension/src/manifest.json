@@ -3,13 +3,12 @@
   "name": "Habitat",
   "default_locale": "en",
   "icons": {
-    "16": "assets/images/icon-16.png",
-    "48": "assets/images/icon-48.png",
-    "128": "assets/images/icon-128.png"
+    "16": "assets/images/pouch-16x16.png",
+    "32": "assets/images/pouch-32x32.png"
   },
   "action": {
     "default_icon": {
-      "38": "assets/images/action-icon.png"
+      "38": "assets/images/pouch-32x32.png"
     },
     "default_title": "Habitat"
   },
