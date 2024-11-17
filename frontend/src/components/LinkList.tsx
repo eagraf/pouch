@@ -103,7 +103,6 @@ const LinkList: React.FC<LinkListProps> = () => {
 
   return (
     <div className="link-container">
-        <h1>My Links</h1>
         <div className="tag-filter">
         {getUniqueTags().map((tag, index) => (
           <span

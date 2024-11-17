@@ -22,6 +22,7 @@ function Home() {
 
     return (
     <div>
+        <h1>🦘 My Links</h1>
         <LinkList links={links} />
     </div>
     );
