@@ -65,9 +65,9 @@
 
 .tag-filter {
     margin-bottom: 20px;
-  }
-  
-  .filter-tag {
+}
+
+.filter-tag {
     display: inline-block;
     background-color: #e0e0e0;
     color: #333;
@@ -78,14 +78,70 @@
     font-size: 0.85rem;
     cursor: pointer;
     transition: background-color 0.2s;
-  }
-  
-  .filter-tag.selected {
+}
+
+.filter-tag.selected {
     background-color: #3498db;
     color: #fff;
-  }
-  
-  .filter-tag:hover {
+}
+
+.filter-tag:hover {
     background-color: #3498db;
     color: #fff;
-  }
+}
+
+
+.add-tag-form {
+    display: inline-flex;
+    gap: 4px;
+}
+
+.add-tag-form input {
+    padding: 3px 8px;
+    border-radius: 12px;
+    border: 1px solid #ccc;
+    font-size: 0.85rem;
+}
+
+.add-tag-form button {
+    background-color: transparent;
+    color: #333;
+    border: 1px solid;
+    border-radius: 12px;
+    padding: 3px 10px;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.add-tag-form button[title="Accept"] {
+    border-color: #4CAF50;
+}
+
+.add-tag-form button[title="Accept"]:hover {
+    background-color: #4CAF50;
+    color: #fff;
+}
+
+.add-tag-form button[title="Cancel"] {
+    border-color: #e74c3c;
+}
+
+.add-tag-form button[title="Cancel"]:hover {
+    background-color: #e74c3c;
+    color: #fff;
+}
+
+.add-tag-button {
+    display: inline-block;
+    background-color: transparent;
+    color: #4CAF50;
+    border: 1px solid #4CAF50;
+    border-radius: 12px;
+    padding: 5px 10px;
+    margin-right: 5px;
+    margin-bottom: 5px;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}

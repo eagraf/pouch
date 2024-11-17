@@ -164,17 +164,32 @@ const AddTagButton: React.FC<AddTagButtonProps> = ({ link, onAddTag }) => {
   return (
     <>
       {isAdding ? (
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} className="add-tag-form">
           <input
             type="text"
             value={newTag}
             onChange={(e) => setNewTag(e.target.value)}
             placeholder="New tag"
+            className="add-tag-form-input"
           />
-          <button type="submit">Add</button>
+          <button 
+            type="submit"
+            className="add-tag-form-button"
+            title="Accept"
+          >
+            ✓
+          </button>
+          <button
+            type="button" 
+            onClick={() => setIsAdding(false)}
+            className="add-tag-form-button"
+            title="Cancel"
+          >
+            ✕
+          </button>
         </form>
       ) : (
-        <button onClick={() => setIsAdding(true)}>+</button>
+        <button onClick={() => setIsAdding(true)} className="add-tag-button">+ Add Tag</button>
       )}
     </>
   );
