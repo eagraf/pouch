@@ -1,6 +1,6 @@
 .link-container {
     max-width: 800px;
-    margin: 0 auto;
+    margin: 0;
     padding: 20px;
     display: flex;
     flex-direction: column;
@@ -144,4 +144,77 @@
     font-size: 0.85rem;
     cursor: pointer;
     transition: background-color 0.2s;
+}
+
+@media screen and (max-width: 768px) {
+  .link-container {
+    padding: 10px;
+  }
+
+  .link-container h1 {
+    font-size: 2rem;
+    padding: 0;
+  }
+
+  .link-list {
+    padding: 0;
+  }
+
+  .link-item {
+    padding: 15px 10px;
+    word-break: break-all;
+  }
+
+  .link-title {
+    font-size: 0.9rem;
+  }
+
+  .link-tags {
+    flex-wrap: wrap;
+    gap: 5px;
+  }
+
+  .link-tag {
+    font-size: 0.85rem;
+    padding: 5px 10px;
+  }
+
+  .add-tag-button {
+    padding: 5px 10px;
+    margin-right: 5px;
+    margin-bottom: 5px;
+    font-size: 0.85rem;
+  }
+
+  .add-tag-form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    margin-top: 5px;
+  }
+
+  .add-tag-form input {
+    flex: 1;
+    min-width: 120px;
+    padding: 8px 12px;
+    font-size: 1rem;
+  }
+
+  .add-tag-form button {
+    padding: 8px 15px;
+    font-size: 1rem;
+  }
+
+  .tag-filter {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    margin-bottom: 15px;
+    justify-content: center;
+  }
+
+  .filter-tag {
+    padding: 3px 5px;
+    font-size: 0.6rem;
+  }
 }
