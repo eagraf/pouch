@@ -6,8 +6,19 @@ import cors from 'cors';
 import * as middlewares from './middlewares';
 import api from './api';
 import MessageResponse from './interfaces/MessageResponse';
+import sqlite3 from 'sqlite3';
+import { open } from 'sqlite';
 
 require('dotenv').config();
+
+(async () => {
+  const db = await open({
+    filename: './database.sqlite',
+    driver: sqlite3.Database,
+  });
+
+  await db.migrate();
+})()
 
 const app = express();
 
